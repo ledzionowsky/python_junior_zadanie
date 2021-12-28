@@ -57,4 +57,4 @@ except Error as e:
 # -----------koniec połączenia z bazą danych-------------
 finally:
     con.close()
-    csv_file.close()
+    #csv_file.close()
