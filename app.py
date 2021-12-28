@@ -1,3 +1,4 @@
+import sqlite3
 import urllib
 
 from flask import Flask, request, app, current_app, \
@@ -5,6 +6,8 @@ from flask import Flask, request, app, current_app, \
 import os
 import requests
 import pandas as pd
+
+import sql_service
 
 app = Flask(__name__)
 app.config["SECRET_KEY"]= "nininini"
@@ -14,8 +17,8 @@ app.config["SECRET_KEY"]= "nininini"
 @app.route('/app/user_task', methods=['GET'])
 def todos_report():
     if request.method == 'GET':
-        print()
-        return
+        sql_service.city
+        return 'asdasasdas'
 
 
 if __name__ == '__main__':

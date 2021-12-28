@@ -6,13 +6,14 @@ import json
 import csv
 import os
 import sqlite3 as sql
+
 try:
 
-    #--------łączenie z bazą danych-----------
-    con =sqlite3.connect('database.db')
+    # --------łączenie z bazą danych-----------
+    con = sqlite3.connect('database.db')
     cur = con.cursor()
 
-    #-----------------TABELA USERS--------------
+    # -----------------TABELA USERS--------------
     cur.execute(
         """CREATE TABLE IF NOT EXISTS users (id integer PRIMARY KEY,name varchar, city varchar)""");
 
@@ -20,14 +21,13 @@ try:
     u = response.json()
 
     for dict in u:
-        id=dict['id']
-        name=dict['name']
-        city=dict['address']['city']
-        cur.execute("""INSERT INTO users(id, name, city) VALUES(?,?,?)""", (id,name,city))
+        id = dict['id']
+        name = dict['name']
+        city = dict['address']['city']
+        cur.execute("""INSERT INTO users(id, name, city) VALUES(?,?,?)""", (id, name, city))
         con.commit()
 
-
-    #--------------TABELA TODOS-------------
+    # --------------TABELA TODOS-------------
     cur.execute(
         """CREATE TABLE IF NOT EXISTS todos (userId integer, id integer, title varchar, completed varchar)""");
 
@@ -35,14 +35,13 @@ try:
     t = response.json()
 
     for item in t:
-        cur.execute("""INSERT INTO todos VALUES(:userId, :id, :title,:completed)""",item)
+        cur.execute("""INSERT INTO todos VALUES(:userId, :id, :title,:completed)""", item)
         con.commit()
 
+    # -----------import danych z tabel sqlite do pliku csv---------
 
-
-    #-----------import danych z tabel sqlite do pliku csv---------
-
-    cur.execute("select users.name, users.city, todos.title, todos.completed from users inner join todos on todos.userId=users.id")
+    cur.execute(
+        "select users.name, users.city, todos.title, todos.completed from users inner join todos on todos.userId=users.id")
     with open("users_task.csv", "w") as csv_file:
         csv_writer = csv.writer(csv_file, delimiter="\t")
         csv_writer.writerow([i[0] for i in cur.description])
@@ -55,7 +54,7 @@ try:
 except Error as e:
     print(e)
 
-#-----------koniec połączenia z bazą danych-------------
+# -----------koniec połączenia z bazą danych-------------
 finally:
     con.close()
     csv_file.close()
